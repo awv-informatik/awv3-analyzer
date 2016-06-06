@@ -1,5 +1,6 @@
 var path = require('path'),
-    webpack = require('webpack');
+    webpack = require('webpack'),
+    production = require('yargs').argv.production;
 
 module.exports = {
     entry: './index.js',
@@ -25,6 +26,15 @@ module.exports = {
             }]
     },
 
+    plugins: [
+        new webpack.DefinePlugin({ 'process.env': { 'NODE_ENV': JSON.stringify('production') } }),
+        new webpack.optimize.OccurrenceOrderPlugin(true),
+    ].concat(production ? [
+        new webpack.optimize.UglifyJsPlugin({ mangle: true, compress: { warnings: false } }),
+    ] : []),
+
     devServer: { contentBase: './' },
-    devtool: 'source-map'
+    devtool: production ? undefined : 'source-map',
+    cache: true,
+    debug: !production,
 };

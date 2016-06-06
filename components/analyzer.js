@@ -1,5 +1,4 @@
 import io from 'socket.io-client';
-import merge from 'deepmerge';
 import { state } from './store';
 
 export default class {
