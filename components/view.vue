@@ -22,5 +22,5 @@
 </script>
 
 <style scoped>
-    #view { position: relative; width: 100%; height: 100%; overflow: hidden; background-color: #373737; }
+    #view { position: relative; width: 100%; height: 100%; overflow: hidden; background-color: #dedede; }
 </style>
