@@ -38,6 +38,7 @@
   "homepage": "https://github.com/awv3-next/awv3-analyzer#readme",
   "dependencies": {
     "awv3": "^1.0.4",
+    "fast-json-patch": "^0.5.7",
     "socket.io-client": "^1.4.6",
     "vue": "^1.0.24",
     "vue-router": "^0.7.13"

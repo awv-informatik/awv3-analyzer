@@ -39,7 +39,7 @@
     #logger span.user:hover { background-color: #474747; }
 
     #logger {
-        background-color: #f0f0f0;
+        background-color: #3e3e3e;
         font-family: 'Source Code Pro', monospace;
     font-size: 12px;
     width: 100%;
@@ -51,10 +51,6 @@
     }
 
     #log { flex-grow: 1; overflow-y: scroll; }
-
-    ::-webkit-scrollbar { width: 12px;  height: 12px; }
-    ::-webkit-scrollbar-track { background: rgba(255, 255, 255, 0.6); }
-    ::-webkit-scrollbar-thumb { background: #ff4081; }
     input[type=range] { -webkit-appearance: none; background-color: silver; width: 200px; height:10px; }
     input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; background-color: #555; opacity: 0.5; width: 10px; height: 26px; }
 </style>

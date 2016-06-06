@@ -6,8 +6,8 @@ dom.style.width = "100%";
 dom.style.height = "100%";
 dom.style.overflow = "hidden";
 
-export let state = {
-    internal: {
+export function internal() {
+    return {
         type: 'system',
         alive: true,
         errors: [],
@@ -17,10 +17,17 @@ export let state = {
         users: [],
         analyzers: [],
         sessions: []
-    },
+    }
+}
+
+export let temporary = internal();
+
+export let state = {
+    internal: internal(),
     canvas: new Canvas({ dom }),
     view: new View(),
-    messages: []
+    messages: [],
+    log: []
 };
 
 export function createCluster(which) {

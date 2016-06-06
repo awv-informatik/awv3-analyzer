@@ -1,8 +1,8 @@
 <template>
     <div id="combined">
         <div id="left">
-            <view-component></view-component>
             <cluster-component></cluster-component>
+            <view-component></view-component>
         </div>
         <logger-component></logger-component>
     </div>
@@ -28,6 +28,6 @@
 <style scoped>
 
     #combined { display: flex; flex-direction: row; width: 100%; height: 100%; background-color: white; }
-    #left { display: flex; flex-direction: column; flex: 1 0 400px; }
+    #left { display: flex; flex-direction: column; flex: 1 0 600px; }
 
 </style>
