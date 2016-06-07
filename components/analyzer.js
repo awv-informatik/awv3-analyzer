@@ -4,7 +4,7 @@ import { state, internal } from './store';
 
 export default class {
     connect(url) {
-        return new Promise(resolve => {
+        return new Promise((resolve, reject) => {
             this.url = url;
             this.socket = io.connect(url);
             this.socket.once("connect", () => {
@@ -12,6 +12,9 @@ export default class {
                 this.socket.once('permission', data => resolve(this));
                 this.socket.emit('init', { debug: true });
             });
+
+            this.socket.on('connect_error', reason => reject(reason));
+            this.socket.on('connect_timeout', reason => reject(reason));
 
             this.socket.on('internal', changes => {
                 this.socket.emit('received');
