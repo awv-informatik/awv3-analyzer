@@ -9,14 +9,6 @@
     width: 100%
     height: 100%
 
-#editor-view
-    position: absolute
-    left: 60%
-    width: 40%
-    height: 100%
-    overflow: hidden
-    background-color: #eaeaea
-
 #editor-code
     position: absolute
     left: 0
@@ -28,13 +20,36 @@ div.CodeMirror
     height: 100%
     font-size: 12px
 
+#editor-side
+    position: absolute
+    left: 60%
+    width: 40%
+    height: 100%
+    display: flex
+    flex-direction: column
+
+.editor-view
+    background-color: material-color('grey', '200')
+    overflow: hidden
+    flex: 1
+
+.editor-results
+    background-color: material-color('grey', '300')
+    flex: 1
+
+.alertify-logs
+    z-index: 1000
+
 </style>
 
 <template>
 
 <div class="editor-container">
 
-    <div id="editor-view"></div>
+    <div id="editor-side">
+        <div class="editor-view"></div>
+        <div class="editor-results swoosh active"></div>
+    </div>
     <div id="editor-code">
         <textarea id="editor" name="code"></textarea>
     </div>
@@ -44,20 +59,20 @@ div.CodeMirror
 
 <script>
 
-import {
-    state
-}
+import { state }
 from './store';
 import Object3 from 'awv3/three/object3';
 import SocketIO from 'awv3/communication/socketio';
-
+import alertify from 'alertify.js'
 import CodeMirror from 'codemirror';
 import 'codemirror/mode/javascript/javascript';
+import 'codemirror/addon/edit/matchbrackets.js';
+import 'codemirror/addon/selection/active-line.js';
 
 export default {
     data: () => ({ }),
     compiled() {
-        this.$el.querySelector("#editor-view").appendChild(state.canvas.dom);
+        this.$el.querySelector(".editor-view").appendChild(state.canvas.dom);
     },
     ready() {
 
@@ -66,18 +81,12 @@ export default {
             theme: "3024-day",
             indentUnit: 4,
             lineWrapping: true,
+            matchBrackets: true,
+            styleActiveLine: true,
             mode: "javascript"
         });
 
         let text = `
-function addModels(context) {
-    let object = new Object3(context)
-        .setPosition(Math.random() * 1000 - 500, Math.random() * 1000 - 500, Math.random() * 1000 - 500)
-        .setRotation(Math.random() * 2 * Math.PI, Math.random() * 2 * Math.PI, Math.random() * 2 * Math.PI);
-    state.view.scene.add(object);
-    state.view.updateBounds().controls.zoom().focus();
-}
-
 // Create a couple of connections
 for (let i = 0; i < 1; i++) {
     new SocketIO().connect('http://awvr2.cloudapp.net:8080').then(connection => {
@@ -108,9 +117,18 @@ _O.ToolDesigner3d.GetComponentParams("EXTENSION");
         // Disconnect client ...
         promise = promise.then( _ => connection.disconnect());
     });
+}
+
+function addModels(context) {
+    let object = new Object3(context)
+        .setPosition(Math.random() * 1000 - 500, Math.random() * 1000 - 500, Math.random() * 1000 - 500)
+        .setRotation(Math.random() * 2 * Math.PI, Math.random() * 2 * Math.PI, Math.random() * 2 * Math.PI);
+    state.view.scene.add(object);
+    state.view.updateBounds().controls.zoom().focus();
 }`;
 
         editor.setValue(text);
+        alertify.log("Hit ctrl-s to compile!");
 
         window.SocketIO = SocketIO;
         window.Object3 = Object3;
@@ -119,7 +137,13 @@ _O.ToolDesigner3d.GetComponentParams("EXTENSION");
         document.addEventListener("keydown", e => {
             if (e.keyCode == 83 && (navigator.platform.match("Mac") ? e.metaKey : e.ctrlKey)) {
                 e.preventDefault();
-                eval(editor.getValue());
+                try {
+                    eval(editor.getValue());
+                    alertify.success("Compiled sucessfully");
+                } catch (reason) {
+                    alertify.error(reason);
+                    console.error(reason);
+                }
             }
         }, false);
 

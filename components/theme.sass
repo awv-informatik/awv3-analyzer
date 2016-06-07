@@ -12,8 +12,35 @@ $accent-color: material-color('teal', 'a400')
 .color-black
     color: black
 
-.error
+.classcad-error
     background-color: $error-color
     color: white
     font-size: 2em
     font-weight: 600
+
+.swoosh
+    overflow: hidden
+    position: relative
+
+.swoosh:after
+    content: ""
+    background: rgba(0, 0, 0, 0.5)
+    width: 100%
+    position: absolute
+    top: 0
+    right: 0
+    bottom: 0
+    left: 0
+    transform: translateY(100%)
+    transform-origin: 50% 100%
+
+.active:after
+    animation-name: swoosh
+    animation-duration: 2s
+    animation-iteration-count: infinite
+    animation-timing-function: cubic-bezier(0.5, 0, 0.5, 1)
+
+@keyframes swoosh
+    0%   {transform: translateY(100%);}
+    30% {transform: translateY(-100%);}
+    75% {transform: translateY(100%);}

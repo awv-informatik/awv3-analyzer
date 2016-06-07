@@ -40,6 +40,7 @@
   },
   "homepage": "https://github.com/awv3-next/awv3-analyzer#readme",
   "dependencies": {
+    "alertify.js": "^1.0.11",
     "awv3": "^1.0.4",
     "codemirror": "^5.15.2",
     "fast-json-patch": "^0.5.7",

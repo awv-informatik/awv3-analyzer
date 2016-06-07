@@ -79,7 +79,7 @@ header > .logo > span
             <li><a v-link="{ path: '/combined' }" class="nav-link">Combined</a></li>
             <li><a v-link="{ path: '/stdout' }" class="nav-link">Stdout</a></li>
             <li><a v-link="{ path: '/logger' }" class="nav-link">Logger</a></li>
-            <li><a v-link="{ path: '/view' }" class="nav-link">Editor</a></li>
+            <li><a v-link="{ path: '/editor' }" class="nav-link">Editor</a></li>
         </ul>
     </header>
     <router-view keep-alive></router-view>
@@ -91,6 +91,7 @@ header > .logo > span
 
 import Analyzer from './analyzer';
 import { state } from './store';
+import alertify from 'alertify.js'
 
 //http://localhost:8181
 //http://awvr2.cloudapp.net:8080
@@ -99,7 +100,9 @@ export default {
         url: "http://awvr2.cloudapp.net:8080"
     }),
     async ready() {
-        new Analyzer().connect(this.url);
+        new Analyzer().connect(this.url)
+            .then( _ => alertify.success(`Connected to ${this.url}`))
+            .catch( reason => alertify.error(`Could not connect to ${this.url}, reason: ${reason}`));
     }
 }
 
