@@ -63,13 +63,6 @@ span
     overflow-x: hidden
     font-size: 12px
 
-.tag
-    position: absolute
-    bottom: 10px
-    left: 10px
-    padding: 5px
-    color: black
-
 .preview
     width: 100%
     height: 100%
@@ -82,14 +75,9 @@ span
 
     <div class="row" v-for="row in rows">
         <div v-bind:class="{ item: true, 'get-button': true, ['bg-color-' + item.color + '-600']: true, active: item.tasks.length }" v-for="item in row">
-            <p><span>{{item.id}}</span></p>
-            <p><span>{{item.tasks.length}}</span></p>
-            <!--<div class="stdout">
+            <div class="stdout">
                 <p v-for="log in item.log">{{log.message}}</p>
             </div>
-            <div class="tag bg-color-{{item.color}}-600">
-                <p>{{item.id}}</p>
-            </div>-->
         </div>
     </div>
 
@@ -103,10 +91,9 @@ import { createCluster, state } from './store';
 
 export default {
     data: () => ({ state: state }),
-    props: ['target'],
     computed: {
         rows: function () {
-            return createCluster(this.target)
+            return createCluster("sessions")
         }
     }
 }

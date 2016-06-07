@@ -20,8 +20,6 @@ export function internal() {
     }
 }
 
-export let temporary = internal();
-
 export let state = {
     internal: internal(),
     canvas: new Canvas({ dom }),
