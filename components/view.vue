@@ -36,46 +36,7 @@ div.CodeMirror
 
     <div id="editor-view"></div>
     <div id="editor-code">
-        <textarea id="editor" name="code"><!--
-function addModels(context) {
-    let object = new Object3(context)
-        .setPosition(Math.random() * 1000 - 500, Math.random() * 1000 - 500, Math.random() * 1000 - 500)
-        .setRotation(Math.random() * 2 * Math.PI, Math.random() * 2 * Math.PI, Math.random() * 2 * Math.PI);
-    state.view.scene.add(object);
-    state.view.updateBounds().controls.zoom().focus();
-}
-
-for (let i = 0; i < 5; i++) {
-new SocketIO().connect('http://awvr2.cloudapp.net:8080').then(connection => {
-    // Run commands
-    let promise = Promise.resolve();
-
-    promise = promise.then( _ => {
-        console.log("running first task")
-        return connection.execute(`
-
-_C.ToolDesigner3d.InitApplication("Drawings/3dToolDesigner/3dToolDesigner.of1");
-_O.ToolDesigner3d.LoadExistingTool("Drawings/ISO_Tool/Demo_Tool.of1");
-
-            `).then(context => addModels(context.models))
-        });
-
-
-    promise = promise.then( _ => {
-        console.log("running second task")
-        return connection.execute(`
-
-_O.ToolDesigner3d.SetComponentParams("EXTENSION",["LB", "BD"],[150, 100]);
-_O.ToolDesigner3d.GetComponentParams("EXTENSION");
-
-            `).then(context => addModels(context.models))
-        });
-
-    promise = promise.then( _ => connection.disconnect());
-});
-}-->
-
-        </textarea>
+        <textarea id="editor" name="code"></textarea>
     </div>
 </div>
 
@@ -107,6 +68,49 @@ export default {
             lineWrapping: true,
             mode: "javascript"
         });
+
+        let text = `
+function addModels(context) {
+    let object = new Object3(context)
+        .setPosition(Math.random() * 1000 - 500, Math.random() * 1000 - 500, Math.random() * 1000 - 500)
+        .setRotation(Math.random() * 2 * Math.PI, Math.random() * 2 * Math.PI, Math.random() * 2 * Math.PI);
+    state.view.scene.add(object);
+    state.view.updateBounds().controls.zoom().focus();
+}
+
+// Create a couple of connections
+for (let i = 0; i < 5; i++) {
+    new SocketIO().connect('http://awvr2.cloudapp.net:8080').then(connection => {
+
+        // Create a promise-chain
+        let promise = Promise.resolve();
+
+        // First task
+        promise = promise.then( _ => {
+            console.log("running first task")
+            return connection.execute(\`
+
+_C.ToolDesigner3d.InitApplication("Drawings/3dToolDesigner/3dToolDesigner.of1");
+_O.ToolDesigner3d.LoadExistingTool("Drawings/ISO_Tool/Demo_Tool.of1");
+
+        \`).then(context => addModels(context.models))});
+
+        // Second task
+        promise = promise.then( _ => {
+            console.log("running second task")
+            return connection.execute(\`
+
+_O.ToolDesigner3d.SetComponentParams("EXTENSION",["LB", "BD"],[150, 100]);
+_O.ToolDesigner3d.GetComponentParams("EXTENSION");
+
+        \`).then(context => addModels(context.models))});
+
+        // Disconnect client ...
+        promise = promise.then( _ => connection.disconnect());
+    });
+}`;
+
+        editor.setValue(text);
 
         window.SocketIO = SocketIO;
         window.Object3 = Object3;
