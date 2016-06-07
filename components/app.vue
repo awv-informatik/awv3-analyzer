@@ -93,6 +93,7 @@ import Analyzer from './analyzer';
 import { state } from './store';
 
 //http://localhost:8181
+//http://awvr2.cloudapp.net:8080
 export default {
     data: () => ({
         url: "http://awvr2.cloudapp.net:8080"
