@@ -79,7 +79,7 @@ function addModels(context) {
 }
 
 // Create a couple of connections
-for (let i = 0; i < 5; i++) {
+for (let i = 0; i < 1; i++) {
     new SocketIO().connect('http://awvr2.cloudapp.net:8080').then(connection => {
 
         // Create a promise-chain
