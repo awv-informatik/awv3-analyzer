@@ -17,7 +17,7 @@
     margin: 60px
 
 #logger p, span
-    margin: 2px
+    margin: 0px
     padding: 0
 
 #logger p.fadeout

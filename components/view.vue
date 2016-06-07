@@ -5,7 +5,7 @@
 @import 'codemirror/theme/3024-day'
 
 .editor-container
-    position: absolute
+    position: relative
     width: 100%
     height: 100%
 
@@ -25,7 +25,7 @@
     overflow: hidden
 
 div.CodeMirror
-    height: calc(100% - 90px)
+    height: 100%
     font-size: 12px
 
 </style>
