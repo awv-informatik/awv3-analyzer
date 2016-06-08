@@ -9,8 +9,6 @@ export default class {
             this.url = url;
             this.socket = io.connect(url);
             this.socket.once("connect", () => {
-                console.log("connected")
-                console.log(this.socket.io.engine.transport.name);
                 this.socket.once('permission', data => resolve(this));
                 this.socket.emit('init', { debug: true });
             });
