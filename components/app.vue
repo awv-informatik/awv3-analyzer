@@ -1,8 +1,9 @@
 <style lang="sass">
 
 @import 'theme'
+@import 'sass-material-colors/sass/sass-material-colors-classes'
 
-html, body
+html, body, input
     margin: 0
     padding: 0
 
@@ -65,8 +66,24 @@ header > .logo
     background-size: cover
     width: 40px
 
-header > .logo > span
+header > .logo > span:first-child
     margin-left: 50px
+
+#search-query
+    height: 30px
+    line-height: 30px
+    box-sizing: border-box
+    padding: 0 15px 0 30px
+    border: 1px solid #e3e3e3
+    outline: none
+    border-radius: 15px
+    margin-right: 10px
+    transition: border-color 0.2s ease
+    background: #fff url("./search.png") 8px 5px no-repeat
+    background-size: 20px
+
+#search-query:focus
+    border-color: $accent-color
 
 </style>
 
@@ -74,8 +91,13 @@ header > .logo > span
 
 <main>
     <header>
-        <div class="logo"><span>AWV3</span></div>
+        <div class="logo"><span>AWV3</span><span class="color-teal-a400">ANALYZER</span></div>
         <ul id="nav">
+            <li>
+                <form id="search-form">
+                    <input type="text" id="search-query" v-model="state.filter">
+                </form>
+            </li>
             <li><a v-link="{ path: '/combined' }" class="nav-link">Combined</a></li>
             <li><a v-link="{ path: '/stdout' }" class="nav-link">Stdout</a></li>
             <li><a v-link="{ path: '/logger' }" class="nav-link">Logger</a></li>
@@ -93,16 +115,12 @@ import Analyzer from './analyzer';
 import { state } from './store';
 import alertify from 'alertify.js'
 
-//http://localhost:8181
-//http://awvr2.cloudapp.net:8080
 export default {
-    data: () => ({
-        url: "http://awvr2.cloudapp.net:8080"
-    }),
-    async ready() {
-        new Analyzer().connect(this.url)
-            .then( _ => alertify.success(`Connected to ${this.url}`))
-            .catch( reason => alertify.error(`Could not connect to ${this.url}, reason: ${reason}`));
+    data: () => ({ state: state }),
+    ready() {
+        new Analyzer().connect(state.url)
+            .then( _ => alertify.success(`Connected to ${state.url}`))
+            .catch( reason => alertify.error(`Could not connect to ${state.url}, reason: ${reason}`));
     }
 }
 

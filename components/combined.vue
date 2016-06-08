@@ -30,7 +30,7 @@
         <cluster target="users" class="users"></cluster>
     </div>
     <div class="right-side">
-        <logger class="log"></logger>
+        <logger scroll="true" class="log"></logger>
     </div>
 </div>
 

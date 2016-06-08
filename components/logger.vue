@@ -17,7 +17,7 @@
     margin: 60px
 
 #logger p, span
-    margin: 0px
+    margin: 0
     padding: 0
 
 #logger p.fadeout
@@ -27,7 +27,7 @@
     cursor: pointer
 
 #logger span.classcad:hover, #logger span.user:hover
-    background-color: #474747
+    background-color: #d0d0d0
 
 #log
     flex-grow: 1
@@ -47,10 +47,21 @@
 
 <div id="logger">
     <div id="logger-wrap">
-        <p v-for="item in messages" class="color-{{item.user.color}}-600">
+        <p v-for="item in messages | filterBy state.filter" track-by="$index"
+            class="color-{{item.user.color}}-600 {{!user && !classcad || (item.classcad.key === classcad || item.user.key === user) ? '' : 'fadeout'}}">
             <span class="dot bg-color-{{item.user.color}}-600"></span>
-            <span class="classcad _{{item.classcad.key}} color-{{item.classcad.color}}-600" v-on:mouseover="fade(item, 'classcad', 'add')" v-on:mouseout="fade(item, 'classcad', 'remove')">{{item.classcad.key}}</span>
-            <span class="user _{{item.user.key}}" v-on:mouseover="fade(item, 'user', 'add')" v-on:mouseout="fade(item, 'user', 'remove')">{{item.user.key}}</span>
+            <span class="classcad _{{item.classcad.key}} color-{{item.classcad.color}}-600"
+                v-on:mouseover="fade(item, 'classcad', 'add')"
+                v-on:mouseout="fade(item, 'classcad', 'remove')"
+                v-on:click="state.filter = item.classcad.key">
+                {{item.classcad.key}}
+            </span>
+            <span class="user _{{item.user.key}}"
+                v-on:mouseover="fade(item, 'user', 'add')"
+                v-on:mouseout="fade(item, 'user', 'remove')"
+                v-on:click="state.filter = item.user.key">
+                {{item.user.key}}
+            </span>
             <span>{{item.sign}}</span>
             <span class="{{item.classes}}color-{{item.user.color}}-600">{{item.message}}</span>
             <span> +{{item.diff}}ms</span>
@@ -66,12 +77,21 @@ import { state } from './store';
 
 export default {
     data: () => ({
-        messages: state.messages
+        messages: state.messages,
+        classcad: null,
+        user: null,
+        state
     }),
+    watch: {
+        messages(val, oldVal) {
+            if (this.scroll)
+                requestAnimationFrame( _ => this.$el.scrollTop = this.$el.scrollHeight);
+        }
+    },
+    props: ['scroll'],
     methods: {
         fade(item, which, action) {
-            for (let selector of document.body.querySelectorAll(`.${which}:not(._${item[which].key})`))
-                selector.parentNode.classList[action]('fadeout');
+            this[which] = (action === 'add') ? item[which].key : undefined;
         }
     }
 }
