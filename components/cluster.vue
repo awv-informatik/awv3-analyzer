@@ -21,8 +21,11 @@
     overflow: hidden
     text-overflow: ellipsis
     font-family: 'Source Code Pro', monospace
-    font-size: 12px    
+    font-size: 12px
     cursor: pointer
+
+.item:hover
+    -webkit-filter: invert(0.2)
 
 span
     color: white
@@ -57,7 +60,9 @@ span
 <div class="container">
 
     <div class="row" v-for="row in rows">
-        <div v-bind:class="{ item: true, swoosh: true, ['bg-color-' + item.color + '-400']: true, active: item.tasks.length }" v-for="item in row">
+        <div v-for="item in row"
+            v-bind:class="{ item: true, swoosh: true, ['bg-color-' + item.color + '-400']: true, active: item.tasks.length }"
+            v-on:click="state.filter = item.id">
             <p><span>{{item.id}}</span></p>
             <p><span>{{item.tasks.length}}</span></p>
             <!--<div class="stdout">

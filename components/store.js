@@ -6,8 +6,10 @@ dom.style.width = "100%";
 dom.style.height = "100%";
 dom.style.overflow = "hidden";
 
-export function internal() {
-    return {
+export let state = {
+    url: 'http://awvr2.cloudapp.net:8080', //http://localhost:8181
+    filter: '',
+    internal: {
         type: 'system',
         alive: true,
         errors: [],
@@ -17,11 +19,7 @@ export function internal() {
         users: [],
         analyzers: [],
         sessions: []
-    }
-}
-
-export let state = {
-    internal: internal(),
+    },
     canvas: new Canvas({ dom }),
     view: new View(),
     messages: [],
