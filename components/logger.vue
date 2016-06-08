@@ -19,6 +19,7 @@
 #logger p, span
     margin: 0
     padding: 0
+    word-break: break-word
 
 #logger p.fadeout
     opacity: 0.1
