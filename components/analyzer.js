@@ -19,11 +19,10 @@ export default class {
                 SocketIO._ack(this.socket);
                 switch(data.type) {
                     case 'patch':
-                        requestIdleCallback(_ => jsonpatch.apply(state.internal, data.patch));
+                        jsonpatch.apply(state.internal, data.patch);
                         break;
                     case 'message':
-                        console.log(data)
-                        requestIdleCallback(_ => state.messages.push(data));
+                        state.messages.push(data);
                         break;
                 }
 

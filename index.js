@@ -17,3 +17,4 @@ router.map({
 });
 
 router.start(App, '#app');
+router.go('/combined');
