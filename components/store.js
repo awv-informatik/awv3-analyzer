@@ -6,8 +6,9 @@ dom.style.width = "100%";
 dom.style.height = "100%";
 dom.style.overflow = "hidden";
 
+let url = document.location.hostname == 'localhost' ? 'http://localhost:8181' : 'http://awvr2.cloudapp.net:8080';
 export let state = {
-    url: document.location.hostname == 'localhost' ? 'http://localhost:8181' : 'http://awvr2.cloudapp.net:8080',
+    url,
     filter: '',
     internal: {
         type: 'system',
@@ -27,7 +28,7 @@ export let state = {
     code: `// Run a couple of connections
 let tasks = [];
 for (let i = 0; i < 1; i++) {
-  tasks.push(new SocketIO().connect(startupUrl).then(connection => {
+  tasks.push(new SocketIO().connect('${url}').then(connection => {
 
     // Clear scene
     view.scene.destroy();
@@ -49,7 +50,7 @@ _O.ToolDesigner3d.SetComponentParams("EXTENSION",["LB", "BD"],[150, 100]);
 RETURN CADH_JSONTreeExportStr(_O.Demo_Tool);
 
     \`))
-    .then(context => addModels(context, "Task"))
+    .then(context => addModels(context, "Task 2"))
     .then(context => connection.disconnect());
   }));
 }
@@ -57,7 +58,7 @@ RETURN CADH_JSONTreeExportStr(_O.Demo_Tool);
 log.start();
 Promise.all(tasks).then(context => log.stop());
 
-let r1 = () => Math.random() * 1000 - 500;
+let r1 = () => Math.random() * 500 - 250;
 let r2 = () => Math.random() * 2 * Math.PI;
 function addModels(context, descr = "") {
     log.printResults(descr);

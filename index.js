@@ -5,7 +5,6 @@ import Editor from './components/editor.vue';
 import Logger from './components/logger.vue';
 import Cluster from './components/cluster.vue';
 import Combined from './components/combined.vue';
-import Stdout from './components/stdout.vue';
 
 Vue.use(VueRouter);
 const router = new VueRouter();
@@ -15,7 +14,6 @@ router.map({
     '/combined': { component: Combined },
     '/logger': { component: Logger },
     '/editor': { component: Editor },
-    '/stdout': { component: Stdout }
 });
 
 router.start(App, '#app');
