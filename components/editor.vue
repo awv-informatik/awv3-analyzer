@@ -51,39 +51,19 @@ div.CodeMirror
 .alertify-logs
     z-index: 1000
 
-.toggle
-    cursor: pointer
-
-.bold
-    font-weight: bold
-
 ul
     padding-left: 1em
     list-style-type: none
-
-ul p
-    margin: 0
-
-ul span.stretch
-    margin-left: 0.3em
-    margin-right: 0.3em
-
-.array
-    margin-left: 0.2em
-    margin-right: 0.2em
 
 </style>
 
 <template>
 
 <div class="editor-container">
-
     <div id="editor-side">
         <div class="editor-view swoosh {{active ? 'active' : ''}}"></div>
         <div class="editor-results cm-s-3024-day">
-            <ul>
-                <item class="child" :model="treeData" :open="true"></item>
-            </ul>
+            <ul><json-tree :model="treeData" :open="true"></json-tree></ul>
         </div>
     </div>
     <div id="editor-code">
@@ -104,80 +84,12 @@ import CodeMirror from 'codemirror';
 import 'codemirror/mode/javascript/javascript';
 import 'codemirror/addon/edit/matchbrackets.js';
 import 'codemirror/addon/selection/active-line.js';
+import JsonTree from './jsontree.vue';
 
 let editor = undefined;
 
-// define the item component
-Vue.component('item', {
-    template: `
-
-    <template v-if="isAtomic">
-        <p><span class="cm-property" v-if="!!key">{{ key }}: </span><span :class="{'cm-number': isNumber, 'cm-string': !isNumber}">{{ model }}</span></p>
-    </template>
-
-    <li v-else>
-
-    <template v-if="isObject">
-        <span class="cm-property" v-if="!!key">{{ key }}: </span>
-        {
-            <span class="toggle cm-variable-2" @click="toggle">[{{opened ? '-' : '+'}}]</span>
-            <ul v-show="opened">
-                <item v-for="item in model" :model="item" :key="$key"></item>
-            </ul>
-        }
-    </template>
-
-    <template v-if="isArray">
-        <span class="cm-property" v-if="!!key">{{ key }}: </span>
-        [
-            <span class="stretch cm-number" v-if="isFlatArray" v-for="item in model" :model="item">{{ item }}</span>
-            <template v-if="!isFlatArray">
-                <span class="toggle cm-variable-2" @click="toggle">[{{opened ? '-' : '+'}}]</span>
-                <ul v-show="opened">
-                    <item v-for="item in model" :model="item"></item>
-                </ul>
-            </template>
-        ]
-    </template>
-
-    </li>
-
-    `,
-    props: [ 'model', 'key', 'open' ],
-    data() {
-        return { opened: this.open }
-    },
-    computed: {
-        isAtomic() {
-            return typeof this.model !== 'object' && !Array.isArray(this.model);
-        },
-        isObject() {
-            return typeof this.model === 'object' && !Array.isArray(this.model);
-        },
-        isArray() {
-            return Array.isArray(this.model);
-        },
-        isFlatArray() {
-            if (Array.isArray(this.model)) {
-                for (let item of this.model) {
-                    if (typeof item === 'object')
-                        return false;
-                }
-                return true;
-            }
-        },
-        isNumber() {
-            return !isNaN(parseFloat(this.model));
-        }
-    },
-    methods: {
-        toggle() {
-            this.opened = !this.opened;
-        }
-    }
-});
-
 export default {
+    components: { 'json-tree': JsonTree },
     data: () => ({
         active: false,
         treeData: []
@@ -211,7 +123,7 @@ export default {
         });
 
         // Fetch code, either from the browsers local storage or the default
-        let value = localStorage.getItem('awv3-analyzer-editor-content') || state.code;
+        let value = localStorage.getItem(state.storageKey) || state.code;
         editor.setValue(value);
         alertify.log("Hit Ctrl-S to compile, Ctrl-R to reset");
 
@@ -220,6 +132,8 @@ export default {
         window.canvas = state.canvas;
         window.view = state.view;
         window.log = this;
+        window.url = state.url;
+        window.alertify = alertify;
 
         this.refresh();
     },
@@ -257,7 +171,7 @@ export default {
 
                     // It compiled! Store the code in the browsers local storage and notify
                     alertify.success("Compiled sucessfully");
-                    localStorage.setItem('awv3-analyzer-editor-content', value);
+                    localStorage.setItem(state.storageKey, value);
 
                 } catch (reason) {
                     alertify.error(reason);
