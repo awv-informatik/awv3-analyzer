@@ -33,10 +33,6 @@
     font-size: 2em
     font-weight: 600
 
-#logger span.classcad-stdout
-    background-color: #373737
-    color: white
-
 #logger span.classcad:hover, #logger span.user:hover
     background-color: #d0d0d0
 
