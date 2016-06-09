@@ -1,6 +1,6 @@
 <style lang="sass" scoped>
 
-@import 'theme'
+@import './../theme'
 
 .container
     position: relative
@@ -36,23 +36,6 @@ span
     margin: 0
     padding: 0
 
-.stdout
-    height: 100%
-    overflow-y: auto
-    overflow-x: hidden
-    font-size: 12px
-
-.tag
-    position: absolute
-    bottom: 10px
-    left: 10px
-    padding: 5px
-    color: black
-
-.preview
-    width: 100%
-    height: 100%
-
 </style>
 
 <template>
@@ -65,12 +48,6 @@ span
             v-on:click="state.filter = item.id">
             <p><span>{{item.id}}</span></p>
             <p><span>{{item.tasks.length}}</span></p>
-            <!--<div class="stdout">
-                <p v-for="log in item.log">{{log.message}}</p>
-            </div>
-            <div class="tag bg-color-{{item.color}}-600">
-                <p>{{item.id}}</p>
-            </div>-->
         </div>
     </div>
 
@@ -80,14 +57,29 @@ span
 
 <script>
 
-import { createCluster, state } from './store';
+import { state } from './../store';
 
 export default {
     data: () => ({ state: state }),
     props: ['target'],
     computed: {
         rows: function () {
-            return createCluster(this.target)
+            let root = Math.round(Math.sqrt(state.internal[this.target].length));
+            let result = [];
+            let index = 0;
+            while (index < state.internal[this.target].length) {
+                let row = [];
+                result.push(row);
+                for (let r = 0; r < root; r++) {
+                    let item = state.internal[this.target][index++];
+                    if (item) {
+                        row.push(item)
+                    } else {
+                        break;
+                    }
+                }
+            }
+            return result;
         }
     }
 }
