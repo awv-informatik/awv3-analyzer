@@ -22,11 +22,8 @@ export default class {
                         requestIdleCallback(_ => jsonpatch.apply(state.internal, data.patch));
                         break;
                     case 'message':
+                        console.log(data)
                         requestIdleCallback(_ => state.messages.push(data));
-                        break;
-                    case 'log':
-                        let session = state.internal.sessions.find(session => session.id === data.classcad);
-                        session && requestIdleCallback(_ => session.log.push(data));
                         break;
                 }
 

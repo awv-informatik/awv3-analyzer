@@ -99,7 +99,6 @@ header > .logo > span:first-child
                 </form>
             </li>
             <li><a v-link="{ path: '/combined' }" class="nav-link">Combined</a></li>
-            <li><a v-link="{ path: '/stdout' }" class="nav-link">Stdout</a></li>
             <li><a v-link="{ path: '/logger' }" class="nav-link">Logger</a></li>
             <li><a v-link="{ path: '/editor' }" class="nav-link">Editor</a></li>
         </ul>

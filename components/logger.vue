@@ -27,6 +27,12 @@
 #logger span.classcad, #logger span.user
     cursor: pointer
 
+#logger span.classcad-error
+    background-color: $error-color
+    color: white
+    font-size: 2em
+    font-weight: 600
+
 #logger span.classcad:hover, #logger span.user:hover
     background-color: #d0d0d0
 

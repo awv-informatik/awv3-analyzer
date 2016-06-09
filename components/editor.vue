@@ -22,6 +22,9 @@ div.CodeMirror
     height: initial
     font-size: 12px
 
+.cm-s-3024-day span.cm-string
+    color: #ff9800
+
 #editor-side
     position: absolute
     left: 60%
@@ -31,13 +34,13 @@ div.CodeMirror
     flex-direction: column
 
 .editor-view
-    background-color: material-color('grey', '200')
+    background-color: #cce2d7
     overflow: hidden
     flex: 1
 
 .editor-results
-    background-color: material-color('grey', '300')
-    flex: 1
+    background-color: #efefef
+    flex: 2
     font-family: 'Source Code Pro', monospace
     font-size: 12px
     margin: 0
@@ -48,7 +51,7 @@ div.CodeMirror
 .alertify-logs
     z-index: 1000
 
-.child
+.toggle
     cursor: pointer
 
 .bold
@@ -61,7 +64,7 @@ ul
 ul p
     margin: 0
 
-ul span
+ul span.stretch
     margin-left: 0.3em
     margin-right: 0.3em
 
@@ -77,7 +80,7 @@ ul span
 
     <div id="editor-side">
         <div class="editor-view swoosh {{active ? 'active' : ''}}"></div>
-        <div class="editor-results">
+        <div class="editor-results cm-s-3024-day">
             <ul>
                 <item class="child" :model="treeData" :open="true"></item>
             </ul>
@@ -109,15 +112,15 @@ Vue.component('item', {
     template: `
 
     <template v-if="isAtomic">
-        <p><span v-if="!!key">{{ key }}: </span>{{ model }}</p>
+        <p><span class="cm-property" v-if="!!key">{{ key }}: </span><span :class="{'cm-number': isNumber, 'cm-string': !isNumber}">{{ model }}</span></p>
     </template>
 
     <li v-else>
 
     <template v-if="isObject">
-        {{ key }}
+        <span class="cm-property" v-if="!!key">{{ key }}: </span>
         {
-            <span class="child" @click="toggle">[{{opened ? '-' : '+'}}]</span>
+            <span class="toggle cm-variable-2" @click="toggle">[{{opened ? '-' : '+'}}]</span>
             <ul v-show="opened">
                 <item v-for="item in model" :model="item" :key="$key"></item>
             </ul>
@@ -125,11 +128,11 @@ Vue.component('item', {
     </template>
 
     <template v-if="isArray">
-        <span v-if="!!key">{{ key }}: </span>
+        <span class="cm-property" v-if="!!key">{{ key }}: </span>
         [
-            <span v-if="isFlatArray" v-for="item in model" :model="item">{{ item }}</span>
+            <span class="stretch cm-number" v-if="isFlatArray" v-for="item in model" :model="item">{{ item }}</span>
             <template v-if="!isFlatArray">
-                <span class="child" @click="toggle">[{{opened ? '-' : '+'}}]</span>
+                <span class="toggle cm-variable-2" @click="toggle">[{{opened ? '-' : '+'}}]</span>
                 <ul v-show="opened">
                     <item v-for="item in model" :model="item"></item>
                 </ul>
@@ -162,6 +165,9 @@ Vue.component('item', {
                 }
                 return true;
             }
+        },
+        isNumber() {
+            return !isNaN(parseFloat(this.model));
         }
     },
     methods: {
@@ -214,7 +220,6 @@ export default {
         window.canvas = state.canvas;
         window.view = state.view;
         window.log = this;
-        window.startupUrl = state.url;
 
         this.refresh();
     },
