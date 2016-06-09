@@ -41,7 +41,7 @@ div.CodeMirror
     font-family: 'Source Code Pro', monospace
     font-size: 12px
     margin: 0
-    padding: 10px
+    padding: 60px
     overflow-y: auto
     overflow-x: hidden
 
@@ -54,14 +54,16 @@ div.CodeMirror
 .bold
     font-weight: bold
 
-li
-    list-style-type: none
-
 ul
     padding-left: 1em
-    padding-bottom: 0.5em
-    line-height: 1.5em
     list-style-type: none
+
+ul p
+    margin: 0
+
+ul span
+    margin-left: 0.3em
+    margin-right: 0.3em
 
 .array
     margin-left: 0.2em
@@ -76,13 +78,13 @@ ul
     <div id="editor-side">
         <div class="editor-view swoosh {{active ? 'active' : ''}}"></div>
         <div class="editor-results">
-            <ul id="demo">
-                <item class="child" :model="treeData"></item>
+            <ul>
+                <item class="child" :model="treeData" :open="true"></item>
             </ul>
         </div>
     </div>
     <div id="editor-code">
-        <textarea id="editor" name="code"></textarea>
+        <textarea id="editor"></textarea>
     </div>
 </div>
 
@@ -100,66 +102,74 @@ import 'codemirror/mode/javascript/javascript';
 import 'codemirror/addon/edit/matchbrackets.js';
 import 'codemirror/addon/selection/active-line.js';
 
+let editor = undefined;
+
 // define the item component
 Vue.component('item', {
     template: `
 
-    <li v-if="!isObject">
-        <div v-if="!isObject">{{key}}: {{model}}</div>
-    </li>
-    <li v-else>
-        <div v-show="!!key" :class="{bold: isObject}" @click="toggle">
-            {{key}}<span v-if="!isObject">: {{model}}</span>
-            <span v-if="isObject">[{{open ? '-' : '+'}}]</span>
-        </div>
+    <template v-if="isAtomic">
+        <p><span v-if="!!key">{{ key }}: </span>{{ model }}</p>
+    </template>
 
-        <div v-show="isFlatArray">
-            [<span v-for="item in keys" class="array">{{item.model}}</span>]
-        </div>
-        <ul v-else v-show="open" v-if="isObject">
-            <item class="child" v-for="item in keys" :model="item.model" :key="item.key"> </item>
-        </ul>
-    </li>`,
-  props: [ 'model', 'key' ],
-  data() {
-    return { open: true }
-  },
-  computed: {
-      isObject() {
-          return (typeof this.model === 'object');
-      },
-      isFlatArray() {
-          if (Array.isArray(this.model)) {
-              for (let item of this.model) {
-                  if (typeof item === 'object')
-                    return false;
-              }
-              return true;
-          }
-      },
-      isNumber() {
-          return !isNaN(parseFloat(this.key));
-      },
-      keys() {
-        let keys = [];
-        if (Array.isArray(this.model)) {
-            for (let item of this.model)
-                keys.push({model: item});
-        } else {
-            for (let key in this.model) {
-                if (this.model.hasOwnProperty(key))
-                    keys.push({model: this.model[key], key});
+    <li v-else>
+
+    <template v-if="isObject">
+        {{ key }}
+        {
+            <span class="child" @click="toggle">[{{opened ? '-' : '+'}}]</span>
+            <ul v-show="opened">
+                <item v-for="item in model" :model="item" :key="$key"></item>
+            </ul>
+        }
+    </template>
+
+    <template v-if="isArray">
+        <span v-if="!!key">{{ key }}: </span>
+        [
+            <span v-if="isFlatArray" v-for="item in model" :model="item">{{ item }}</span>
+            <template v-if="!isFlatArray">
+                <span class="child" @click="toggle">[{{opened ? '-' : '+'}}]</span>
+                <ul v-show="opened">
+                    <item v-for="item in model" :model="item"></item>
+                </ul>
+            </template>
+        ]
+    </template>
+
+    </li>
+
+    `,
+    props: [ 'model', 'key', 'open' ],
+    data() {
+        return { opened: this.open }
+    },
+    computed: {
+        isAtomic() {
+            return typeof this.model !== 'object' && !Array.isArray(this.model);
+        },
+        isObject() {
+            return typeof this.model === 'object' && !Array.isArray(this.model);
+        },
+        isArray() {
+            return Array.isArray(this.model);
+        },
+        isFlatArray() {
+            if (Array.isArray(this.model)) {
+                for (let item of this.model) {
+                    if (typeof item === 'object')
+                        return false;
+                }
+                return true;
             }
         }
-        return keys;
+    },
+    methods: {
+        toggle() {
+            this.opened = !this.opened;
+        }
     }
-  },
-  methods: {
-    toggle() {
-        this.open = !this.open;
-    }
-  }
-})
+});
 
 export default {
     data: () => ({
@@ -169,25 +179,24 @@ export default {
     route: {
         data() {
             this.refresh();
-        },
-        activate() {
-            document.addEventListener("keydown", this.listen, false);
-        },
-        deactivate() {
-            document.removeEventListener("keydown", this.listen, false);
         }
     },
+    created() {
+        window.addEventListener("keydown", this.listen);
+    },
     compiled() {
-        // Append view
         this.$el.querySelector(".editor-view").appendChild(state.canvas.dom);
-
+    },
+    beforeDestroy() {
+        window.removeEventListener("keydown", this.listen);
     },
     ready() {
         // Create editor
-        if (!!!this.editor) this.editor = CodeMirror.fromTextArea(this.$el.querySelector("#editor"), {
+        editor = CodeMirror.fromTextArea(this.$el.querySelector("#editor"), {
             lineNumbers: true,
             theme: "3024-day",
-            indentUnit: 4,
+            indentUnit: 2,
+            tabSize: 2,
             lineWrapping: true,
             matchBrackets: true,
             styleActiveLine: true,
@@ -195,12 +204,10 @@ export default {
             mode: "javascript"
         });
 
-        setTimeout( _ => this.editor.refresh(), 20);
-
         // Fetch code, either from the browsers local storage or the default
         let value = localStorage.getItem('awv3-analyzer-editor-content') || state.code;
-        this.editor.setValue(value);
-        alertify.log("Hit ctrl-s to compile, ctrl-r to reset");
+        editor.setValue(value);
+        alertify.log("Hit Ctrl-S to compile, Ctrl-R to reset");
 
         window.SocketIO = SocketIO;
         window.Object3 = Object3;
@@ -216,6 +223,7 @@ export default {
             setTimeout(_ => {
                 state.canvas.renderer.resize();
                 state.canvas.renderer.invalidateViews(60);
+                editor.refresh()
             }, 20);
         },
         start() {
@@ -226,21 +234,20 @@ export default {
             this.active = false;
         },
         printResults(context) {
-            if (Array.isArray(context)) {
+            if (Array.isArray(context))
                 context.forEach(item => this.treeData.push(item.result));
-            } else {
+            else
                 this.treeData.push(context)
-            }
         },
         listen(e) {
             if (e.keyCode == 83 && (navigator.platform.match("Mac") ? e.metaKey : e.ctrlKey)) {
 
-                // Save: ctrl-s
+                // Save: Ctrl-S
                 e.preventDefault();
                 try {
 
                     // Get code from editor and compile using eval
-                    let value = this.editor.getValue();
+                    let value = editor.getValue();
                     eval(value);
 
                     // It compiled! Store the code in the browsers local storage and notify
@@ -253,10 +260,10 @@ export default {
 
             } else if (e.keyCode == 82 && (navigator.platform.match("Mac") ? e.metaKey : e.ctrlKey)) {
 
-                // Reset: ctrl-r
+                // Reset: Ctrl-R
                 e.preventDefault();
                 localStorage.removeItem('awv3-analyzer-editor-content');
-                this.editor.setValue(state.code);
+                editor.setValue(state.code);
                 alertify.log("Content has been reset");
             }
         }
