@@ -27,31 +27,31 @@ export let state = {
     code: `// Run a couple of connections
 let tasks = [];
 for (let i = 0; i < 1; i++) {
-    tasks.push(new SocketIO().connect(startupUrl).then(connection => {
+  tasks.push(new SocketIO().connect(startupUrl).then(connection => {
 
-        // Clear scene
-        view.scene.destroy();
+    // Clear scene
+    view.scene.destroy();
 
-        // Execute tasks and disconnect
-        return connection.execute(\`
+    // Execute tasks and disconnect
+    return connection.execute(\`
 
 // Init tooldesigner and load tool
 _C.ToolDesigner3d.InitApplication("Drawings/3dToolDesigner/3dToolDesigner.of1");
 _O.ToolDesigner3d.LoadExistingTool("Drawings/ISO_Tool/Demo_Tool.of1");
 RETURN _O.ToolDesigner3d.GetComponentParams("EXTENSION");
 
-        \`)
-        .then(context => addModels(context, "Task 1"))
-        .then(context => connection.execute(\`
+    \`)
+    .then(context => addModels(context, "Task 1"))
+    .then(context => connection.execute(\`
 
 // Change extension and return new dimensions
 _O.ToolDesigner3d.SetComponentParams("EXTENSION",["LB", "BD"],[150, 100]);
 RETURN CADH_JSONTreeExportStr(_O.Demo_Tool);
 
-        \`))
-        .then(context => addModels(context, "Task 2"))
-        .then(context => connection.disconnect());
-    }));
+    \`))
+    .then(context => addModels(context, "Task"))
+    .then(context => connection.disconnect());
+  }));
 }
 
 log.start();
