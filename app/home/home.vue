@@ -1,6 +1,6 @@
 <style lang="sass" scoped>
 
-#combined
+.combined
     width: 100%
     height: 100%
     background-color: white
@@ -24,13 +24,13 @@
 
 <template>
 
-<div id="combined">
+<div class="combined">
     <div class="left-side">
         <cluster target="sessions" class="sessions"></cluster>
         <cluster target="users" class="users"></cluster>
     </div>
     <div class="right-side">
-        <logger scroll="true" class="log"></logger>
+        <log scroll="true" class="log"></log>
     </div>
 </div>
 
@@ -38,13 +38,13 @@
 
 <script>
 
-import Logger from './logger.vue';
-import Cluster from './cluster.vue';
+import Log from './../log/log.vue';
+import Cluster from './../home/cluster.vue';
 
 export default {
     data: () => ({}),
     components: {
-        'logger': Logger,
+        'log': Log,
         'cluster': Cluster
     }
 }

@@ -93,13 +93,9 @@ header > .logo > span:first-child
     <header>
         <div class="logo"><span>AWV3</span><span class="color-teal-a400">ANALYZER</span></div>
         <ul id="nav">
-            <li>
-                <form id="search-form">
-                    <input type="text" id="search-query" v-model="state.filter">
-                </form>
-            </li>
-            <li><a v-link="{ path: '/combined' }" class="nav-link">Combined</a></li>
-            <li><a v-link="{ path: '/logger' }" class="nav-link">Logger</a></li>
+            <li><input type="text" id="search-query" v-model="state.filter"></li>
+            <li><a v-link="{ path: '/home' }" class="nav-link">Home</a></li>
+            <li><a v-link="{ path: '/log' }" class="nav-link">Log</a></li>
             <li><a v-link="{ path: '/editor' }" class="nav-link">Editor</a></li>
         </ul>
     </header>
@@ -110,8 +106,8 @@ header > .logo > span:first-child
 
 <script>
 
-import Analyzer from './analyzer';
-import { state } from './store';
+import { state } from './../store';
+import Analyzer from './../analyzer';
 import alertify from 'alertify.js'
 
 export default {

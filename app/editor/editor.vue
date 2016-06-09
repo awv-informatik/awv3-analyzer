@@ -1,6 +1,6 @@
 <style lang="sass">
 
-@import 'theme'
+@import './../theme'
 @import 'codemirror/lib/codemirror'
 @import 'codemirror/theme/3024-day'
 
@@ -76,7 +76,8 @@ ul
 <script>
 
 import Vue from 'vue';
-import { state } from './store';
+import { state } from './../store';
+import JsonTree from './jsontree.vue';
 import Object3 from 'awv3/three/object3';
 import SocketIO from 'awv3/communication/socketio';
 import alertify from 'alertify.js'
@@ -84,7 +85,6 @@ import CodeMirror from 'codemirror';
 import 'codemirror/mode/javascript/javascript';
 import 'codemirror/addon/edit/matchbrackets.js';
 import 'codemirror/addon/selection/active-line.js';
-import JsonTree from './jsontree.vue';
 
 let editor = undefined;
 
@@ -123,10 +123,11 @@ export default {
         });
 
         // Fetch code, either from the browsers local storage or the default
-        let value = localStorage.getItem(state.storageKey) || state.code;
+        let value = localStorage.getItem(state.storageKey) || state.editorContent;
         editor.setValue(value);
         alertify.log("Hit Ctrl-S to compile, Ctrl-R to reset");
 
+        // Add a couple of globals which can be used by the editor
         window.SocketIO = SocketIO;
         window.Object3 = Object3;
         window.canvas = state.canvas;
@@ -135,11 +136,12 @@ export default {
         window.url = state.url;
         window.alertify = alertify;
 
+        // Ping 3rd party controls
         this.refresh();
     },
     methods: {
         refresh() {
-            setTimeout(_ => {
+            setTimeout( _ => {
                 state.canvas.renderer.resize();
                 state.canvas.renderer.invalidateViews(60);
                 editor.refresh()
@@ -149,8 +151,9 @@ export default {
             this.active = true;
             this.treeData = [];
         },
-        stop() {
+        stop(message) {
             this.active = false;
+            message && alertify.log(message);
         },
         printResults(context) {
             if (Array.isArray(context))
@@ -182,7 +185,7 @@ export default {
                 // Reset: Ctrl-R
                 e.preventDefault();
                 localStorage.removeItem('awv3-analyzer-editor-content');
-                editor.setValue(state.code);
+                editor.setValue(state.editorContent);
                 alertify.log("Content has been reset");
             }
         }

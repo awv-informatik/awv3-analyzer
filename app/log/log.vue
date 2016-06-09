@@ -1,6 +1,6 @@
 <style lang="sass" scoped>
 
-@import 'theme'
+@import './../theme'
 
 #logger
     font-family: 'Source Code Pro', monospace
@@ -80,7 +80,7 @@
 
 <script>
 
-import { state } from './store';
+import { state } from './../store';
 
 export default {
     data: () => ({

@@ -1,7 +1,7 @@
+import { state } from './store';
 import io from 'socket.io-client';
 import jsonpatch from 'fast-json-patch';
 import SocketIO from 'awv3/communication/socketio';
-import { state, internal } from './store';
 
 export default class {
     connect(url) {

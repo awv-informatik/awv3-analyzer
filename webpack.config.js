@@ -3,7 +3,7 @@ var path = require('path'),
     production = require('yargs').argv.production;
 
 module.exports = {
-    entry: './index.js',
+    entry: './app/index.js',
 
     output: {
         publicPath: '/',

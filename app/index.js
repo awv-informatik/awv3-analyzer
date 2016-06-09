@@ -1,9 +1,9 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
-import App from './app/app.vue';
-import Editor from './app/editor.vue';
-import Log from './app/log.vue';
-import Home from './app/home.vue';
+import App from './app.vue';
+import Editor from './editor/editor.vue';
+import Log from './log/log.vue';
+import Home from './home/home.vue';
 
 Vue.use(VueRouter);
 const router = new VueRouter();
@@ -15,4 +15,4 @@ router.map({
 });
 
 router.start(App, '#app');
-router.go('/home');
+router.redirect({ '/': '/home' });
