@@ -19,10 +19,10 @@ export default class {
                 SocketIO._ack(this.socket);
                 switch(data.type) {
                     case 'patch':
-                        jsonpatch.apply(state.internal, data.patch);
+                        requestAnimationFrame(_ => jsonpatch.apply(state.internal, data.patch));
                         break;
                     case 'message':
-                        state.messages.push(data);
+                        requestAnimationFrame(_ => state.messages.push(data));
                         break;
                 }
 
