@@ -91,8 +91,7 @@ export default {
     }),
     watch: {
         messages(val, oldVal) {
-            if (this.scroll)
-                requestAnimationFrame( _ => this.$el.scrollTop = this.$el.scrollHeight);
+            this.scroll && requestAnimationFrame( _ => this.$el.scrollTop = this.$el.scrollHeight);
         }
     },
     props: ['scroll'],
