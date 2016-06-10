@@ -14,7 +14,7 @@ ul span.stretch
     margin-left: 0.3em
     margin-right: 0.3em
 
-.array
+span.array
     margin-left: 0.2em
     margin-right: 0.2em
 
@@ -52,7 +52,7 @@ span.toggle
 
     <template v-if="isArray">
         <span class="property" v-if="!!key">{{ key }}: </span> [
-        <span class="number" v-if="isFlatArray" v-for="item in model" :model="item">{{ item }}</span>
+        <span class="number array" v-if="isFlatArray" v-for="item in model" :model="item">{{ item }}</span>
         <template v-if="!isFlatArray">
             <span class="toggle" @click="toggle">[{{opened ? '-' : '+'}}]</span>
             <ul v-show="opened">
