@@ -61,7 +61,7 @@ ul
 
 <div class="editor-container">
     <div id="editor-side">
-        <div class="editor-view swoosh {{active ? 'active' : ''}}"></div>
+        <div class="editor-view"></div>
         <div class="editor-results cm-s-3024-day">
             <ul><json-tree :model="treeData" :open="true"></json-tree></ul>
         </div>
@@ -148,11 +148,9 @@ export default {
             }, 20);
         },
         start() {
-            this.active = true;
             this.treeData = [];
         },
         stop(message) {
-            this.active = false;
             message && alertify.log(message);
         },
         printResults(context) {

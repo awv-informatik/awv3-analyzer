@@ -56,19 +56,6 @@ header
     position: relative
     z-index: 2
 
-header > .logo
-    float: left
-    line-height: 40px
-    font-family: 'Montserrat', sans-serif
-    font-size: 30px
-    color: #34495e
-    background-image: url(./logo.png)
-    background-size: cover
-    width: 40px
-
-header > .logo > span:first-child
-    margin-left: 50px
-
 #search-query
     height: 30px
     line-height: 30px
@@ -85,13 +72,28 @@ header > .logo > span:first-child
 #search-query:focus
     border-color: $accent-color
 
+.logo
+    position: absolute!important
+    width: 40px!important
+    height: 40px!important
+    line-height: 40px
+
+.descr
+    margin-left: 50px
+    float: left
+    line-height: 40px
+    font-family: 'Montserrat', sans-serif
+    font-size: 30px
+    color: #34495e
+
 </style>
 
 <template>
 
 <main>
     <header>
-        <div class="logo"><span>AWV3</span><span class="color-teal-a400">ANALYZER</span></div>
+        <cluster class="logo" target="sessions" simple="true"></cluster>
+        <span class="descr">AWV3<span class="color-teal-a400">ANALYZER</span></span>
         <ul id="nav">
             <li><input type="text" id="search-query" v-model="state.filter"></li>
             <li><a v-link="{ path: '/home' }" class="nav-link">Home</a></li>
@@ -108,9 +110,11 @@ header > .logo > span:first-child
 
 import { state } from './store';
 import Analyzer from './analyzer';
+import Cluster from './home/cluster.vue';
 import alertify from 'alertify.js'
 
 export default {
+    components: { cluster: Cluster },
     data: () => ({ state: state }),
     ready() {
         new Analyzer().connect(state.url)

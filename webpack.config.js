@@ -24,13 +24,15 @@ module.exports = {
             }],
     },
 
-    vue: { loaders: { sass: "vue-style-loader!css-loader!sass?indentedSyntax" } },
+    vue: { loaders: { sass: 'vue-style-loader!css-loader!sass?indentedSyntax' } },
     sassLoader: { includePaths: ['node_modules'] },
+    worker: { output: { filename: 'generated/worker.js' } },
 
     plugins: [
         new webpack.DefinePlugin({ 'process.env': { 'NODE_ENV': JSON.stringify('production') } })
     ].concat(production ? [
         new webpack.optimize.OccurrenceOrderPlugin(true),
+        new webpack.optimize.DedupePlugin(),
         new webpack.optimize.UglifyJsPlugin({ mangle: true, compress: { warnings: false } }),
     ] : []),
 

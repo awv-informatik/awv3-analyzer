@@ -46,8 +46,10 @@ span
         <div v-for="item in row"
             v-bind:class="{ item: true, swoosh: true, ['bg-color-' + item.color + '-400']: true, active: item.tasks.length }"
             v-on:click="state.filter = item.id">
-            <p><span>{{item.id}}</span></p>
-            <p><span>{{item.tasks.length}}</span></p>
+            <template v-if="!simple">
+                <p><span>{{item.id}}</span></p>
+                <p><span>{{item.tasks.length}}</span></p>
+            </template>
         </div>
     </div>
 
@@ -61,7 +63,7 @@ import { state } from './../store';
 
 export default {
     data: () => ({ state: state }),
-    props: ['target'],
+    props: ['target', 'simple'],
     computed: {
         rows: function () {
             let root = Math.round(Math.sqrt(state.internal[this.target].length));
