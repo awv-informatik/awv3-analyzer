@@ -34,6 +34,7 @@ div.CodeMirror
     flex-direction: column
 
 .editor-view
+    position: relative
     background-color: #cce2d7
     overflow: hidden
     flex: 1
