@@ -45,18 +45,18 @@ span.toggle
         <span class="property" v-if="!!key">{{ key }}: </span> {
         <span class="toggle" @click="toggle">[{{opened ? '-' : '+'}}]</span>
         <ul v-show="opened">
-            <json-tree v-for="item in model" :model="item" :key="$key"></json-tree>
+            <json-tree v-for="item in model" :model="item" :key="$key" track-by="$index"></json-tree>
         </ul>
         }
     </template>
 
     <template v-if="isArray">
         <span class="property" v-if="!!key">{{ key }}: </span> [
-        <span class="number array" v-if="isFlatArray" v-for="item in model" :model="item">{{ item }}</span>
+        <span class="number array" v-if="isFlatArray" v-for="item in model" :model="item" track-by="$index">{{ item }}</span>
         <template v-if="!isFlatArray">
             <span class="toggle" @click="toggle">[{{opened ? '-' : '+'}}]</span>
             <ul v-show="opened">
-                <json-tree v-for="item in model" :model="item"></json-tree>
+                <json-tree v-for="item in model" :model="item" track-by="$index"></json-tree>
             </ul>
         </template>
         ]
