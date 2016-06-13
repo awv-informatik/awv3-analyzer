@@ -157,8 +157,10 @@ export default {
         printResults(context) {
             if (Array.isArray(context))
                 context.forEach(item => this.treeData.push(item.result));
-            else
+            else {
+                console.log(context)
                 this.treeData.push(context)
+            }
         },
         listen(e) {
             if (e.keyCode == 83 && (navigator.platform.match("Mac") ? e.metaKey : e.ctrlKey)) {

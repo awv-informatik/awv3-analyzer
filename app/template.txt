@@ -2,8 +2,9 @@
 // 'Canvas', 'View', 'SocketIO' & 'Object3' from AWV3-next
 // 'log' (.start(), .stop(message) & .printResults(string || object))
 
-let tasks = [];
+log.start();
 
+let tasks = [];
 let task = new SocketIO().connect(url).then(connection => {
 
     // Clear scene
@@ -15,18 +16,17 @@ let task = new SocketIO().connect(url).then(connection => {
 // Init tooldesigner and load tool
 _C.ToolDesigner3d.InitApplication("Drawings/3dToolDesigner/3dToolDesigner.of1");
 _O.ToolDesigner3d.LoadExistingTool("Drawings/ISO_Tool/Demo_Tool.of1");
-RETURN CADH_JSONTreeExportStr(_O.Demo_Tool);
-
+RETURN _O.ToolDesigner3d.GetComponentParams("EXTENSION");
 
     `)
-    .then(context => addModels(context, "My task ..."))
+    .then( context => addModels(context, "1st task"))
+    .then( () => connection.execute(`RETURN CADH_JSONTreeExportStr(_O.Demo_Tool);`))
+    .then( context => addModels(context, "2nd task"))
     .then( () => connection.disconnect());
 });
 
 tasks.push(task);
 
-// Wait for them to finish
-log.start();
 Promise.all(tasks).then( () => log.stop("Tasks completed!"));
 
 function addModels(context, descr = "") {
