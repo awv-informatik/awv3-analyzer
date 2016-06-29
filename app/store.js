@@ -8,15 +8,14 @@ dom.style.height = "100%";
 dom.style.overflow = "hidden";
 
 export let state = {
-    storageKey: 'awv3-analyzer-editor-content-3',
-    url: document.location.hostname == 'localhost' ? 'http://localhost:8181' : 'http://awvr2.cloudapp.net:8080',
+    storageKey: 'awv3-analyzer-editor-content-4',
+    url: document.location.hostname == 'localhost' ? 'http://localhost:8181' : 'http://awvr2.cloudapp.net',
     filter: '',
     internal: {
         type: 'system',
         alive: true,
         errors: [],
-        privateport: 0,
-        publicport: 0,
+        options: { publicport: 0, privateport: 0, binary: true, stdout: false, instances: 0 },
         tasks: [],
         users: [],
         analyzers: [],

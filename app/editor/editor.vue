@@ -81,6 +81,7 @@ import { state } from './../store';
 import JsonTree from './jsontree.vue';
 import Object3 from 'awv3/three/object3';
 import SocketIO from 'awv3/communication/socketio';
+import Rest from 'awv3/communication/rest';
 import alertify from 'alertify.js'
 import CodeMirror from 'codemirror';
 import 'codemirror/mode/javascript/javascript';
@@ -130,6 +131,7 @@ export default {
 
         // Add a couple of globals which can be used by the editor
         window.SocketIO = SocketIO;
+        window.Rest = Rest;
         window.Object3 = Object3;
         window.canvas = state.canvas;
         window.view = state.view;

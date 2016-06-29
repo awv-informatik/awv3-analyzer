@@ -1,5 +1,5 @@
 // 'url', default URL, depends on the analyzer running online or local
-// 'Canvas', 'View', 'SocketIO' & 'Object3' from AWV3-next
+// 'Canvas', 'View', 'SocketIO', 'Rest' & 'Object3' from AWV3-next
 // 'log' (.start(), .stop(message) & .printResults(string || object))
 
 log.start();
