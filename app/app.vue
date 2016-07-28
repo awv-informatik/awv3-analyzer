@@ -117,13 +117,17 @@ export default {
     components: { cluster: Cluster },
     data: () => ({ state: state }),
     ready() {
-        alertify.defaultValue(state.url).prompt("Enter server endpoint", val => {
+        new Analyzer().connect(state.url)
+            .then( _ => alertify.success(`Connected to ${state.url}`))
+            .catch( reason => alertify.error(`Could not connect to ${state.url}, reason: ${reason}`));
+
+        /*alertify.defaultValue(state.url).prompt("Enter server endpoint", val => {
             state.url = val
 
             new Analyzer().connect(state.url)
                 .then( _ => alertify.success(`Connected to ${state.url}`))
                 .catch( reason => alertify.error(`Could not connect to ${state.url}, reason: ${reason}`));
-        });
+        });*/
     }
 }
 
