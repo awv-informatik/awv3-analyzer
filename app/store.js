@@ -9,7 +9,7 @@ dom.style.overflow = "hidden";
 
 export let state = {
     storageKey: 'awv3-analyzer-editor-content-4',
-    url: document.location.hostname == 'localhost' ? 'http://localhost:8181' : 'http://awvr2.cloudapp.net',
+    url: document.location.hostname == 'localhost' ? 'http://localhost:8181' : `${window.location.protocol}//${document.location.hostname}`,
     filter: '',
     internal: {
         type: 'system',

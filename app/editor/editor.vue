@@ -86,6 +86,7 @@ import alertify from 'alertify.js'
 import CodeMirror from 'codemirror';
 import 'codemirror/mode/javascript/javascript';
 import 'codemirror/addon/edit/matchbrackets.js';
+import 'codemirror/addon/edit/closebrackets.js';
 import 'codemirror/addon/selection/active-line.js';
 
 let editor = undefined;
@@ -119,6 +120,7 @@ export default {
             tabSize: 2,
             lineWrapping: true,
             matchBrackets: true,
+            autoCloseBrackets: true,
             styleActiveLine: true,
             scrollbarStyle: "null",
             mode: "javascript"
